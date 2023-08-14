@@ -1,1 +1,541 @@
-你好！
+#include <U8g2lib.h>
+#include "zimo.h"
+#include "public.h"
+#include "BluetoothSerial.h"
+
+// #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+// #error Bluetooth is not enabled! Please run make menuconfig` to and enable it
+// #endif
+
+// #if !defined(CONFIG_BT_SPP_ENABLED)
+// #error Serial Bluetooth not available or not enabled. It is only available for the ESP32 chip.
+// #endif
+
+#define abc 4
+#define def 19
+#define ghi 49
+#define jkl 63
+#define mn  93
+#define op  108
+
+U8G2_SSD1306_128X64_NONAME_F_SW_I2C u8g2(U8G2_R0, 16 /*SCL*/, 17 /*SDA*/, U8X8_PIN_NONE);
+BluetoothSerial SerialBT;
+
+// int xingq  ;//星期
+// int xiaos =19;//小时
+// int fena  =3;//分钟的十位
+// int fenb  =0;//分钟的个位
+// int miaoa  =5;
+// int miaob  =9;
+// char ch;
+char buf[6];
+
+int xq=1 ;//=xingq  /*星期*/; 
+int xs=0   ;//= xiaos /*小时*/;
+int fz_1=0 ;//= fena /*分*/;
+int fz_2=0 ;//= fenb /*分*/;
+int ma=0   ;//=miaoa/*秒*/;
+int mb=0   ;// =miaob/*秒*/;
+
+void setup() 
+{
+  Serial.begin(9600);
+  SerialBT.begin("ESP32test"); //Bluetooth device name
+  Serial.println("The device started, now you can pair it with bluetooth!");
+  u8g2.setBusClock(500000);
+  u8g2.begin();
+}
+
+
+void loop() 
+{
+  //static unsigned int start =millis();
+    if (Serial.available()) {
+    SerialBT.write(Serial.read());
+  }
+  if (SerialBT.available()) {
+    //Serial.write(SerialBT.read());
+     for(u8 i=0;i<=5;i++)
+    {
+      buf[i]=SerialBT.read();  
+      // Serial.print(i);
+      // Serial.print("  buf=");
+      // Serial.print(buf[i]); //串口输出蓝牙接收数据   
+     }
+      switch (buf[0]) {//星期
+        case '1':xq=1;
+        break;
+        case '2':xq=2;
+        break;
+        case '3':xq=3;
+        break;
+        case '4':xq=4;
+        break;
+        case '5':xq=5;
+        break;
+        case '6':xq=6;
+        break;
+        case '7':xq=7;
+        break;}
+      switch (buf[1]) {
+      case 'a':xs=0;
+      break;
+      case 'b':xs=1;
+      break;
+      case 'c':xs=2;
+      break;
+      case 'd':xs=3;
+      break;
+      case 'e':xs=4;
+      break;
+      case 'f':xs=5;
+      break;
+      case 'g':xs=6;
+      break;
+      case 'h':xs=7;
+      break;
+      case 'i':xs=8;
+      break;
+      case 'j':xs=9;
+      break;
+      case 'k':xs=10;
+      break;
+      case 'l':xs=11;
+      break;
+      case 'm':xs=12;
+      break;
+      case 'n':xs=13;
+      break;
+      case 'o':xs=14;
+      break;
+      case 'p':xs=15;
+      break;
+      case 'q':xs=16;
+      break;
+      case 'r':xs=17;
+      break;
+      case 's':xs=18;
+      break;
+      case 't':xs=19;
+      break;
+      case 'u':xs=20;
+      break;
+      case 'v':xs=21;
+      break;
+      case 'w':xs=22;
+      break;
+      case 'x':xs=23;
+      break;}
+      switch (buf[2]) {//分钟十位fz_1 6个数
+        case '0': fz_1=0;
+        break;
+        case '1': fz_1=1;
+        break;
+        case '2': fz_1=2;
+        break;
+        case '3': fz_1=3;
+        break;
+        case '4': fz_1=4;
+        break;
+        case '5': fz_1=5;
+        break;
+        case '6': fz_1=6;
+        break;}
+      switch (buf[3]) {//分钟个位
+        case '0':fz_2=0;
+        break;
+        case '1':fz_2=1;
+        break;
+        case '2':fz_2=2;
+        break;
+        case '3':fz_2=3;
+        break;
+        case '4':fz_2=4;
+        break;
+        case '5':fz_2=5;
+        break;
+        case '6':fz_2=6;
+        break;
+        case '7':fz_2=7;
+        break;
+        case '8':fz_2=8;
+        break;
+        case '9':fz_2=9;
+        break;}
+      switch (buf[4]) {
+        case '0':ma=0;
+        break;
+        case '1':ma=1;
+        break;
+        case '2':ma=2;
+        break;
+        case '3':ma=3;
+        break;
+        case '4':ma=4;
+        break;
+        case '5':ma=5;
+        break;
+        case '6':ma=6;
+        break;}
+      switch (buf[5]) {//秒钟个位 mb 10个数
+        case '0':mb=0;
+        break;
+        case '1':mb=1;
+        break;
+        case '2':mb=2;
+        break;
+        case '3':mb=3;
+        break;
+        case '4':mb=4;
+        break;
+        case '5':mb=5;
+        break;
+        case '6':mb=6;
+        break;
+        case '7':mb=7;
+        break;
+        case '8':mb=8;
+        break;
+        case '9':mb=9;
+        break;}
+  }
+  // Serial.print("xq=");
+  // Serial.println(xq); 
+  u8g2.clearBuffer();
+  omain();
+while(mb<10)
+  {
+    mb++;
+    break;
+  }
+  while(mb>9)
+  {
+    mb=0;
+    ma++;
+    break;
+  }
+  while (ma>5) 
+  {
+    ma=0;
+    fz_2++;
+    break;
+  }
+  while (fz_2>9) 
+  {
+    fz_2=0;
+    fz_1++;
+    break;
+  }
+  while(fz_1>5)
+  {
+    fz_1=0;
+    xs++;
+    break;
+  }
+  while (xs>22)
+  {
+    xs=0;
+    xq++;
+    break;
+  }
+  while(xq>7)
+  {
+    xq=1;
+    break;
+}
+  xingqi(xq);
+  xiaoshi(xs);
+  fen_1(fz_1);
+  fen_2(fz_2);
+  miao_1(ma);
+  miao_2(mb);
+  u8g2.sendBuffer();
+ delayMicroseconds(505000);
+  //delayMicroseconds(59500000);
+  //static unsigned int end =millis();
+  
+  // Serial.print("mb=");
+  // Serial.print(mb);
+
+  // Serial.print(" ma=");
+  // Serial.print(ma);
+
+  // Serial.print(" fz_2=");
+  // Serial.print(fz_2);
+
+  // Serial.print("  fz_1=");
+  // Serial.print(fz_1);
+
+  // Serial.print("  xs=");
+  // Serial.print(xs);
+
+  // Serial.print("  xq=");
+  // Serial.print(xq);
+  // Serial.println("  ");
+Serial.println(end-start);
+}
+
+
+
+void omain()
+{
+  u8g2.drawXBMP(19, 1, 30, 30, xing);
+  u8g2.drawXBMP(49, 1, 30, 30, qi);
+  u8g2.drawXBMP(34, 30, 15, 30, maohao);
+  u8g2.drawXBMP(78, 30, 15, 30, maohao);
+}
+void xingqi(int xq)
+{
+    switch (xq)//星期
+      {
+        case 1:u8g2.drawXBMP(79,0,30,30,yi);
+        break;
+        case 2:u8g2.drawXBMP(79,0,30,30,er);
+        break;
+        case 3:u8g2.drawXBMP(79,0,30,30,san);
+        break;
+        case 4:u8g2.drawXBMP(79,0,30,30,si);
+        break;
+        case 5:u8g2.drawXBMP(79,0,30,30,wu);
+        break;
+        case 6:u8g2.drawXBMP(79,0,30,30,liu);
+        break;
+        case 7:u8g2.drawXBMP(79,0,30,30,ri);
+        break;
+      } 
+}
+void xiaoshi(int xs)
+{
+        switch (xs)//24小时
+      {
+        case 0:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_0);
+        break;
+        case 1:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_1);
+        break;
+        case 2:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_2);
+        break;
+        case 3:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_3);
+        break;
+        case 4:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_4);
+        break;
+        case 5:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_5);
+        break;
+        case 6:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_6);
+        break;
+        case 7:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_7);
+        break;
+        case 8:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_8);
+        break;
+        case 9:
+        u8g2.drawXBMP(abc,30,15,30,shu_0);
+        u8g2.drawXBMP(def,30,15,30,shu_9);
+        break;
+        case 10:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_0);
+        break;
+        case 11:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_1);
+        break;
+        case 12:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_2);
+        break;
+        case 13:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_3);
+        break;
+        case 14:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_4);
+        break;
+        case 15:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_5);
+        break;
+        case 16:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_6);
+        break;
+        case 17:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_7);
+        break;
+        case 18:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_8);
+        break;
+        case 19:
+        u8g2.drawXBMP(abc,30,15,30,shu_1);
+        u8g2.drawXBMP(def,30,15,30,shu_9);
+        break;
+        case 20:
+        u8g2.drawXBMP(abc,30,15,30,shu_2);
+        u8g2.drawXBMP(def,30,15,30,shu_0);
+        break;
+        case 21:
+        u8g2.drawXBMP(abc,30,15,30,shu_2);
+        u8g2.drawXBMP(def,30,15,30,shu_1);
+        break;
+        case 22:
+        u8g2.drawXBMP(abc,30,15,30,shu_2);
+        u8g2.drawXBMP(def,30,15,30,shu_2);
+        break;
+        case 23:
+        u8g2.drawXBMP(abc,30,15,30,shu_2);
+        u8g2.drawXBMP(def,30,15,30,shu_3);
+        break;
+      }
+      
+}
+void fen_1(int fz_1)//10
+{
+  switch (fz_1)
+  {
+    case 0:
+    u8g2.drawXBMP(ghi,30,15,30,shu_0);
+    break;
+    case 1:
+    u8g2.drawXBMP(ghi,30,15,30,shu_1);
+    break;
+    case 2:
+    u8g2.drawXBMP(ghi,30,15,30,shu_2);
+    break;
+    case 3:
+    u8g2.drawXBMP(ghi,30,15,30,shu_3);
+    break;
+    case 4:
+    u8g2.drawXBMP(ghi,30,15,30,shu_4);
+    break;
+    case 5:
+    u8g2.drawXBMP(ghi,30,15,30,shu_5);
+    break;
+    case 6:
+    u8g2.drawXBMP(ghi,30,15,30,shu_6);
+    break;
+  }
+}
+void fen_2(int fz_2)//1
+{
+  switch (fz_2)
+  {
+    case 0:
+    u8g2.drawXBMP(jkl,30,15,30,shu_0);
+    break;
+    case 1:
+    u8g2.drawXBMP(jkl,30,15,30,shu_1);
+    break;
+    case 2:
+    u8g2.drawXBMP(jkl,30,15,30,shu_2);
+    break;
+    case 3:
+    u8g2.drawXBMP(jkl,30,15,30,shu_3);
+    break;
+    case 4:
+    u8g2.drawXBMP(jkl,30,15,30,shu_4);
+    break;
+    case 5:
+    u8g2.drawXBMP(jkl,30,15,30,shu_5);
+    break;
+    case 6:
+    u8g2.drawXBMP(jkl,30,15,30,shu_6);
+    break;
+    case 7:
+    u8g2.drawXBMP(jkl,30,15,30,shu_7);
+    break;
+    case 8:
+    u8g2.drawXBMP(jkl,30,15,30,shu_8);
+    break;
+    case 9:
+    u8g2.drawXBMP(jkl,30,15,30,shu_9);
+    break;
+    
+  }
+}
+void miao_1(int miao1)
+{
+  switch (miao1)
+  {
+    case 0:
+    u8g2.drawXBMP(mn,30,15,30,shu_0);
+    break;
+    case 1:
+    u8g2.drawXBMP(mn,30,15,30,shu_1);
+    break;
+    case 2:
+    u8g2.drawXBMP(mn,30,15,30,shu_2);
+    break;
+    case 3:
+    u8g2.drawXBMP(mn,30,15,30,shu_3);
+    break;
+    case 4:
+    u8g2.drawXBMP(mn,30,15,30,shu_4);
+    break;
+    case 5:
+    u8g2.drawXBMP(mn,30,15,30,shu_5);
+    break;
+    case 6:
+    u8g2.drawXBMP(ghi,30,15,30,shu_6);
+    break;
+  }
+}
+void miao_2(int miao2)
+{
+  switch (miao2)
+  {
+    case 0:
+    u8g2.drawXBMP(op,30,15,30,shu_0);
+    break;
+    case 1:
+    u8g2.drawXBMP(op,30,15,30,shu_1);
+    break;
+    case 2:
+    u8g2.drawXBMP(op,30,15,30,shu_2);
+    break;
+    case 3:
+    u8g2.drawXBMP(op,30,15,30,shu_3);
+    break;
+    case 4:
+    u8g2.drawXBMP(op,30,15,30,shu_4);
+    break;
+    case 5:
+    u8g2.drawXBMP(op,30,15,30,shu_5);
+    break;
+    case 6:
+    u8g2.drawXBMP(op,30,15,30,shu_6);
+    break;
+    case 7:
+    u8g2.drawXBMP(op,30,15,30,shu_7);
+    break;
+    case 8:
+    u8g2.drawXBMP(op,30,15,30,shu_8);
+    break;
+    case 9:
+    u8g2.drawXBMP(op,30,15,30,shu_9);
+    break;
+    
+  }
+}
+  
+
+
+```
